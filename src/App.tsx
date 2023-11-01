@@ -1,19 +1,20 @@
-import React, {useEffect} from 'react';
-import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "./app/store";
-import {setMessage} from "./app/appSlice";
+import React, {useEffect, useState} from 'react';
+import {connect} from "./api/RSocket";
+import APIClient from "./api/APIClient";
 
 function App() {
 
-  const message = useSelector((state: RootState) => state.app.message);
-  const dispatch = useDispatch();
+    const [apiClient, setApiClient] = useState<APIClient | undefined>(undefined);
 
   useEffect(() => {
-    console.log(message);
-  }, [message]);
+      connect()
+          .then((reactiveSocket) => {
+              setApiClient(APIClient(reactiveSocket));
+          })
+  }, []);
 
   function buttonClick() {
-    dispatch(setMessage("HELLO"));
+      apiClient?.sendMessage("Hello World!");
   }
 
   return (

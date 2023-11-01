@@ -1,22 +1,20 @@
-import {createSlice, PayloadAction, Slice} from "@reduxjs/toolkit";
+import {createSlice, Slice} from "@reduxjs/toolkit";
+import APIClient from "../api/APIClient";
 
 export interface AppState {
-    message: string
+    apiClient: APIClient | undefined;
 }
 
-const initialState = {
-    message: ''
+const initialState: AppState = {
+    apiClient: undefined
 };
 
 export const appSlice: Slice<AppState> = createSlice({
     name: 'app',
     initialState: initialState,
     reducers: {
-        setMessage: (state, action: PayloadAction<string>) => {
-            state.message = action.payload;
-        }
     }
 });
 
-export const {setMessage} = appSlice.actions;
+export const {setApiClient} = appSlice.actions;
 export default appSlice.reducer;
