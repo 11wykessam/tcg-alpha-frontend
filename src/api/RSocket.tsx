@@ -1,5 +1,5 @@
 import RSocketWebSocketClient from "rsocket-websocket-client";
-import {IdentitySerializer, JsonSerializer, RSocketClient} from 'rsocket-core';
+import {BufferEncoders, MESSAGE_RSOCKET_COMPOSITE_METADATA, RSocketClient} from 'rsocket-core';
 import {ReactiveSocket} from "rsocket-types";
 
 function urlFromLocation() {
@@ -12,19 +12,15 @@ function urlFromLocation() {
 export function connect(): Promise<ReactiveSocket<any, any>> {
     console.log('connecting');
     const rSocketClient = new RSocketClient({
-        serializers: {
-            data: JsonSerializer,
-            metadata: IdentitySerializer
-        },
         setup: {
             keepAlive: 30000,
             lifetime: 90000,
             dataMimeType: 'application/json',
-            metadataMimeType: 'message/x.rsocket.routing.v0'
+            metadataMimeType: MESSAGE_RSOCKET_COMPOSITE_METADATA.string
         },
         transport: new RSocketWebSocketClient({
             url: urlFromLocation()
-        })
+        }, BufferEncoders)
     });
     return new Promise((resolve, reject) => {
         rSocketClient.connect()
