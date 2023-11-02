@@ -28,12 +28,17 @@ function App(): ReactElement {
         );
     }
 
+    function handleClick() {
+        apiClient?.requestResponse("send.message", {message: 'Hello World!'}, token)
+            .then(response => {
+                console.log(response);
+            })
+    }
+
     function renderMainContent(): ReactElement {
         return (
             <div>
-                <p>
-                    {token?.toString()}
-                </p>
+                <button onClick={handleClick}>Click Me</button>
             </div>
         )
     }
