@@ -14,7 +14,10 @@ function App() {
   }, []);
 
   function buttonClick() {
-      apiClient?.sendMessage("Hello World!");
+      apiClient?.sendMessage("Hello World!")
+          .then(response => {
+              console.log("REQUEST COMPLETE");
+          })
   }
 
   return (
