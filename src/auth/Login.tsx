@@ -3,6 +3,7 @@ import {Button, Col, Form, Row} from "react-bootstrap";
 import {useDispatch} from "react-redux";
 import {setToken} from "../app/appSlice";
 import {AuthApiClient} from "../api/auth/AuthApiClient";
+import {LoginResponseV1} from "../api/auth/authTypes";
 
 interface LoginProps {
     authAPIClient: AuthApiClient
@@ -13,6 +14,7 @@ function Login({
                }: LoginProps): ReactElement {
 
     const [validated, setValidated] = useState<boolean>(false);
+    const [success, setSuccess] = useState(true);
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
 
@@ -36,24 +38,26 @@ function Login({
                 username: email,
                 password: password
             })
-                .then((response) => {
-                    dispatch(setToken(response.token));
+                .then((response: LoginResponseV1) => {
+                    if (response.success) {
+                        dispatch(setToken(response.token));
+                    } else {
+                        setSuccess(false);
+                    }
                 })
         }
-
         setValidated(true);
     }
 
     return (
-        <div>
+        <div style={{width: '500px', height: '40px'}}>
             <Form noValidate validated={validated} onSubmit={handleSubmit}>
                 <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
-                    <Form.Label column sm="2">
-                        Email
+                    <Form.Label column sm="2" style={{paddingRight: '15px'}}>
+                        Email:
                     </Form.Label>
                     <Col sm="10">
                         <Form.Control
-                            plaintext
                             defaultValue="email@example.com"
                             required
                             onChange={handleEmailChange}
@@ -62,8 +66,8 @@ function Login({
                 </Form.Group>
 
                 <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
-                    <Form.Label column sm="2">
-                        Password
+                    <Form.Label column sm="2" style={{paddingRight: '15px'}}>
+                        Password:
                     </Form.Label>
                     <Col sm="10">
                         <Form.Control
@@ -74,7 +78,16 @@ function Login({
                         />
                     </Col>
                 </Form.Group>
-                <Button type="submit">Submit form</Button>
+                <Row>
+                    <Col sm="10">
+                        <Button type="submit">Login</Button>
+                    </Col>
+                    <Col sm="10">
+                        <Form.Label>
+                            {!success ? 'Invalid Credentials' : ''}
+                        </Form.Label>
+                    </Col>
+                </Row>
             </Form>
         </div>
     )

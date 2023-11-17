@@ -23,7 +23,6 @@ function createAPIClient(rSocket: ReactiveSocket<any, any>): ApiClient {
                         resolve(JSON.parse(payload.data.toString()));
                     },
                     onError: (error: Error) => {
-                        console.log(error);
                         reject(error);
                     }
                 });

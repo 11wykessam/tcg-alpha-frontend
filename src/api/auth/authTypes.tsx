@@ -4,5 +4,6 @@ export interface LoginRequestV1 {
 }
 
 export interface LoginResponseV1 {
-    token: string
+    token?: string,
+    success: boolean
 }
