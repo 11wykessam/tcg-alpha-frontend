@@ -4,6 +4,7 @@ import {useDispatch} from "react-redux";
 import {setToken} from "../app/appSlice";
 import {AuthApiClient} from "../api/auth/AuthApiClient";
 import {LoginResponseV1} from "../api/auth/authTypes";
+import {ResponseEntity} from "../api/ApiClient";
 
 interface LoginProps {
     authAPIClient: AuthApiClient
@@ -38,9 +39,9 @@ function Login({
                 username: email,
                 password: password
             })
-                .then((response: LoginResponseV1) => {
-                    if (response.success) {
-                        dispatch(setToken(response.token));
+                .then((response: ResponseEntity<LoginResponseV1>) => {
+                    if (response.statusCodeValue == 200) {
+                        dispatch(setToken(response.body.token));
                     } else {
                         setSuccess(false);
                     }

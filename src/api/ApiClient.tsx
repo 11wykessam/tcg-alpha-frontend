@@ -3,7 +3,13 @@ import {toMetadata} from "./Metadata";
 import {toBuffer} from "rsocket-core";
 
 export interface ApiClient {
-    requestResponse: <T, U>(route: string, message: T, auth?: string | undefined) => Promise<U>;
+    requestResponse: <T, U>(route: string, message: T, auth?: string | undefined) => Promise<ResponseEntity<U>>;
+}
+
+export interface ResponseEntity<T> {
+    body: T;
+    statusCodeValue: number;
+    statusCode: string;
 }
 
 function createAPIClient(rSocket: ReactiveSocket<any, any>): ApiClient {
@@ -12,7 +18,7 @@ function createAPIClient(rSocket: ReactiveSocket<any, any>): ApiClient {
         route: string,
         message: T,
         auth: string | undefined = undefined
-    ): Promise<U> {
+    ): Promise<ResponseEntity<U>> {
         return new Promise((resolve, reject) => {
             rSocket.requestResponse({
                 metadata: toMetadata(route, auth),
